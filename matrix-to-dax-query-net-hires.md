@@ -1,6 +1,6 @@
 # Power BI matrix to DAX query: net hires by RD / ED and month
 
-Purpose: reproduce a Power BI matrix (rows: Regional Director > Establishment Director; columns: completed months of the current year; value: net hires; with subtotals and totals) as a single DAX query for the Power Automate action **Run a query against a dataset** (Power BI connector).
+Purpose: reproduce a Power BI matrix (rows: Regional Director > Executive Director; columns: completed months of the current year; value: net hires; with subtotals and totals) as a single DAX query for the Power Automate action **Run a query against a dataset** (Power BI connector).
 
 Status: DRAFT. Table, column and measure names are placeholders (marked `<<...>>`) until Ralf confirms the real model.
 
@@ -8,7 +8,7 @@ Status: DRAFT. Table, column and measure names are placeholders (marked `<<...>>
 
 1. "Net hires" = hires minus separations. If the model has no separations, replace the measure with a plain hires count.
 2. Rows: `Org[RD]` > `Org[ED]` (two levels of the same hierarchy). Subtotal per RD, plus a grand total.
-3. A date table `Calendar` marked as a date table, with `Year` and `MonthNumber` columns, related to the fact table.
+3. A date table `dimDates` marked as a date table, with `Year` and `MonthNumber` columns, related to the fact table.
 4. "Current month" is defined by `TODAY()`. In the Power BI service this uses UTC, so on the 1st of a month (local time) the result can lag by a few hours.
 5. In January there are no completed months, so every month column and the total are blank.
 
@@ -18,35 +18,32 @@ Each month is its own measure column. Months that are not yet completed return B
 
 ```dax
 DEFINE
-    // Placeholder: replace with the real definition (or reference the existing model measures).
-    MEASURE '<<Fact>>'[Net Hires] =
-        [<<Hires>>] - [<<Separations>>]
+    
+    MEASURE 'Employee Hires & Terms'[M01] = IF ( 1  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 1 ) )
+    MEASURE 'Employee Hires & Terms'[M02] = IF ( 2  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 2 ) )
+    MEASURE 'Employee Hires & Terms'[M03] = IF ( 3  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 3 ) )
+    MEASURE 'Employee Hires & Terms'[M04] = IF ( 4  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 4 ) )
+    MEASURE 'Employee Hires & Terms'[M05] = IF ( 5  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 5 ) )
+    MEASURE 'Employee Hires & Terms'[M06] = IF ( 6  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 6 ) )
+    MEASURE 'Employee Hires & Terms'[M07] = IF ( 7  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 7 ) )
+    MEASURE 'Employee Hires & Terms'[M08] = IF ( 8  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 8 ) )
+    MEASURE 'Employee Hires & Terms'[M09] = IF ( 9  < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 9 ) )
+    MEASURE 'Employee Hires & Terms'[M10] = IF ( 10 < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 10 ) )
+    MEASURE 'Employee Hires & Terms'[M11] = IF ( 11 < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 11 ) )
+    MEASURE 'Employee Hires & Terms'[M12] = IF ( 12 < MONTH ( TODAY () ), CALCULATE ( [Net Hires Count], 'dimDates'[YearNumber] = YEAR ( TODAY () ), MONTH('dimDates'[DateValue]) = 12 ) )
 
-    MEASURE '<<Fact>>'[M01] = IF ( 1  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 1 ) )
-    MEASURE '<<Fact>>'[M02] = IF ( 2  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 2 ) )
-    MEASURE '<<Fact>>'[M03] = IF ( 3  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 3 ) )
-    MEASURE '<<Fact>>'[M04] = IF ( 4  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 4 ) )
-    MEASURE '<<Fact>>'[M05] = IF ( 5  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 5 ) )
-    MEASURE '<<Fact>>'[M06] = IF ( 6  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 6 ) )
-    MEASURE '<<Fact>>'[M07] = IF ( 7  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 7 ) )
-    MEASURE '<<Fact>>'[M08] = IF ( 8  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 8 ) )
-    MEASURE '<<Fact>>'[M09] = IF ( 9  < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 9 ) )
-    MEASURE '<<Fact>>'[M10] = IF ( 10 < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 10 ) )
-    MEASURE '<<Fact>>'[M11] = IF ( 11 < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 11 ) )
-    MEASURE '<<Fact>>'[M12] = IF ( 12 < MONTH ( TODAY () ), CALCULATE ( [Net Hires], 'Calendar'[Year] = YEAR ( TODAY () ), 'Calendar'[MonthNumber] = 12 ) )
-
-    MEASURE '<<Fact>>'[Total] =
+    MEASURE 'Employee Hires & Terms'[Total] =
         CALCULATE (
-            [Net Hires],
-            'Calendar'[Year] = YEAR ( TODAY () ),
-            'Calendar'[MonthNumber] < MONTH ( TODAY () )
+            [Net Hires Count],
+            'dimDates'[YearNumber] = YEAR ( TODAY () ),
+            MONTH('dimDates'[DateValue]) < MONTH ( TODAY () )
         )
 
 EVALUATE
 VAR _Rolled =
     SUMMARIZECOLUMNS (
-        ROLLUPADDISSUBTOTAL ( 'Org'[RD], "IsGrandTotal" ),
-        ROLLUPADDISSUBTOTAL ( 'Org'[ED], "IsRDSubtotal" ),
+        ROLLUPADDISSUBTOTAL ( 'dimManagementLocationHierarchy'[Regional Director Combined], "IsGrandTotal" ),
+        ROLLUPADDISSUBTOTAL ( 'dimManagementLocationHierarchy'[Executive Director Combined], "IsRDSubtotal" ),
         "M01", [M01], "M02", [M02], "M03", [M03], "M04", [M04],
         "M05", [M05], "M06", [M06], "M07", [M07], "M08", [M08],
         "M09", [M09], "M10", [M10], "M11", [M11], "M12", [M12],
