@@ -1,0 +1,3 @@
+[submodule "AWC-Logic"]
+	path = AWC-Logic
+	url = https://github.com/ralf-brubacher-bhs/AWC-Logic.git
