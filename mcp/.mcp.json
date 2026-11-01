@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "fabric-core": {
+      "command": "C:\\Users\\User\\.local\\bin\\uv.exe",
+      "args": [
+        "--directory",
+        "c:/Users/User/OneDrive/Escritorio/AWC-Power-Automate/mcp/.servers/fabric-core",
+        "run",
+        "fabric_mcp_stdio.py"
+      ],
+      "defer_loading": true
+    },
+    "powerbi-modeling": {
+      "type": "stdio",
+      "command": "C:\\Users\\User\\.vscode\\extensions\\analysis-services.powerbi-modeling-mcp-1.0.0-win32-x64\\server\\powerbi-modeling-mcp.exe",
+      "args": [
+        "--start"
+      ],
+      "defer_loading": true
+    },
+    "powerbi-translation-audit": {
+      "command": "c:\\Users\\User\\OneDrive\\Escritorio\\AWC-Power-Automate\\mcp\\.servers\\translation-audit\\.venv\\Scripts\\python.exe",
+      "args": [
+        "c:\\Users\\User\\OneDrive\\Escritorio\\AWC-Power-Automate\\mcp\\.servers\\translation-audit\\server.py"
+      ],
+      "defer_loading": true
+    }
+  }
+}
